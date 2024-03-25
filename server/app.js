@@ -13,9 +13,16 @@ const students = require("./students.json");
 // INITIALIZE EXPRESS APP - https://expressjs.com/en/4x/api.html#express
 const app = express();
 
+const cors = require("cors");
+
 // MIDDLEWARE
 // Research Team - Set up CORS middleware here:
 // ...
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+  })
+);
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.static("public"));
