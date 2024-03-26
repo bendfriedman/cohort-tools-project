@@ -7,9 +7,10 @@ const mongoose = require("mongoose");
 // STATIC DATA
 // Devs Team - Import the provided files with JSON data of students and cohorts here:
 // ...
-const cohorts = require("./cohorts.json");
+// const cohorts = require("./cohorts.json");
 //const students = require("./students.json");
-const StudentModel = require("./Models/Student");
+const StudentModel = require("./models/Student");
+const CohortModel = require("./models/Cohort");
 
 // INITIALIZE EXPRESS APP - https://expressjs.com/en/4x/api.html#express
 const app = express();
@@ -40,7 +41,15 @@ app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
 app.get("/api/cohorts", (req, res) => {
-  res.json(cohorts);
+  CohortModel.find({})
+    .then((cohorts) => {
+      console.log("cohorts retrieved", cohorts);
+      res.json(cohorts);
+    })
+    .catch((err) => {
+      console.log("error while fetching cohorts", err);
+      res.status(500).json({ err: "failed to retrieve cohorts" });
+    });
 });
 
 app.get("/api/students", (req, res) => {
