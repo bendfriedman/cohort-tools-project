@@ -47,21 +47,21 @@ function CohortEditPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    // e.preventDefault();
 
     const requestBody = {
       ...cohort,
     };
 
-    axios
+    await axios
       .put(`${API_URL}/api/cohorts/${cohortId}`, requestBody)
       .then(() => navigate(`/cohorts/details/${cohortId}`))
       .catch((error) => console.log(error));
   };
 
-  const handleDelete = () => {
-    axios
+  const handleDelete = async () => {
+    await axios
       .delete(`${API_URL}/api/cohorts/${cohort._id}`)
       .then(() => navigate(`/dashboard`))
       .catch((error) => console.log(error));
@@ -302,14 +302,17 @@ function CohortEditPage() {
         <br />
 
         <button
-         type="submit"
-         className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 transition duration-150 ease-in-out"
-         >Save</button>
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 transition duration-150 ease-in-out"
+          onClick={() => handleSubmit()}
+        >
+          Save
+        </button>
 
         <button
           disabled={loading}
           type="button"
-          onClick={() => setShowDeleteConfirmation(true)}
+          onClick={() => handleDelete()}
           className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4 transition duration-150 ease-in-out"
         >
           Delete
