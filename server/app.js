@@ -113,6 +113,7 @@ app.put("/api/cohorts/:cohortId", (req, res) => {
 // STUDENTS ROUTES
 app.get("/api/students", (req, res) => {
   StudentModel.find({})
+    .populate("cohort")
     .then((students) => {
       console.log("Retrieved Students", students);
       res.json(students);
@@ -127,7 +128,6 @@ app.get("/api/students", (req, res) => {
 app.post("/api/students", (req, res) => {
   console.log("here is the req body", req.body);
   StudentModel.create(req.body)
-    .populate("cohort")
     .then((newStudent) => {
       console.log("new stu added", newStudent);
       res.json({ newStudent, message: "Your student was created!" });
