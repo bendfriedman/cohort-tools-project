@@ -12,6 +12,11 @@ const mongoose = require("mongoose");
 const StudentModel = require("./models/Student.model");
 const CohortModel = require("./models/Cohort.model");
 
+const {
+  errorHandler,
+  notFoundHandler,
+} = require("./middleware/error-handling");
+
 // INITIALIZE EXPRESS APP - https://expressjs.com/en/4x/api.html#express
 const app = express();
 const cors = require("cors");
@@ -42,7 +47,7 @@ app.get("/docs", (req, res) => {
 });
 
 // COHORTS ROUTES
-app.get("/api/cohorts", (req, res) => {
+app.get("/api/cohorts", (req, res, next) => {
   CohortModel.find({})
     .then((cohorts) => {
       console.log("cohorts retrieved", cohorts);
@@ -51,11 +56,12 @@ app.get("/api/cohorts", (req, res) => {
     .catch((err) => {
       console.log("error while fetching cohorts", err);
       res.status(500).json({ err: "failed to retrieve cohorts" });
+      next(err);
     });
 });
 
 //get cohert by Id
-app.get("/api/cohorts/:cohortId", (req, res) => {
+app.get("/api/cohorts/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
   CohortModel.findById(cohortId)
     .then((foundCohertById) => {
@@ -67,23 +73,28 @@ app.get("/api/cohorts/:cohortId", (req, res) => {
         .status(500)
         .json({ message: "error while fetching cohort By the Id", error });
       console.log("error while fetching cohort By the Id", error);
+      next(err);
     });
 });
 
 //cohort post
-app.post("/api/cohorts", (req, res) => {
+app.post("/api/cohorts", (req, res, next) => {
   console.log("here is the req body", req.body);
   CohortModel.create(req.body)
     .then((newCohort) => {
       console.log("new cohort added", newCohort);
       res.json({ newCohort, message: "Your cohort was created!" });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      res.status(500).json({ message: "error while creating cohort" });
+      console.log(err);
+      next(err);
+    });
 });
 
 //cohert delete
 
-app.delete("/api/cohorts/:cohortId", (req, res) => {
+app.delete("/api/cohorts/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
   CohortModel.findByIdAndDelete(cohortId)
     .then((deletedCohort) => {
@@ -95,23 +106,27 @@ app.delete("/api/cohorts/:cohortId", (req, res) => {
         .status(500)
         .json({ message: "error while deleting cohort By the Id", error });
       console.log("error while deleting cohort By the Id", error);
+      next(err);
     });
 });
 
 //update cohort by id
 
-app.put("/api/cohorts/:cohortId", (req, res) => {
+app.put("/api/cohorts/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
   CohortModel.findByIdAndUpdate(cohortId, req.body, { new: true })
     .then((updatedCohort) => {
       res.status(200).json(updatedCohort);
       console.log("updated by Id", updatedCohort);
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      console.log(error);
+      next(err);
+    });
 });
 
 // STUDENTS ROUTES
-app.get("/api/students", (req, res) => {
+app.get("/api/students", (req, res, next) => {
   StudentModel.find({})
     .populate("cohort")
     .then((students) => {
@@ -121,22 +136,26 @@ app.get("/api/students", (req, res) => {
     .catch((error) => {
       console.log("Error while get students from DB", error);
       res.status(500).json({ error: "Failed to retrieve students" });
+      next(err);
     });
 });
 
 //Create a new Student
-app.post("/api/students", (req, res) => {
+app.post("/api/students", (req, res, next) => {
   console.log("here is the req body", req.body);
   StudentModel.create(req.body)
     .then((newStudent) => {
       console.log("new stu added", newStudent);
       res.json({ newStudent, message: "Your student was created!" });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      next(err);
+    });
 });
 
 // get a specific student by id
-app.get("/api/students/:studentId", (req, res) => {
+app.get("/api/students/:studentId", (req, res, next) => {
   const { studentId } = req.params;
   StudentModel.findById(studentId)
     .populate("cohort")
@@ -147,11 +166,12 @@ app.get("/api/students/:studentId", (req, res) => {
     .catch((err) => {
       res.status(500).json({ message: "error getting student by id", err });
       console.log(err);
+      next(err);
     });
 });
 
 //get all students by cohort id
-app.get("/api/students/cohort/:cohortId", (req, res) => {
+app.get("/api/students/cohort/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
   StudentModel.findById(cohortId)
     .populate("cohort")
@@ -162,11 +182,12 @@ app.get("/api/students/cohort/:cohortId", (req, res) => {
     .catch((err) => {
       res.status(500).json({ message: "error getting students", err });
       console.log("error getting students", err);
+      next(err);
     });
 });
 
 //update a specific student by id
-app.put("/api/students/:studentId", (req, res) => {
+app.put("/api/students/:studentId", (req, res, next) => {
   const { studentId } = req.params;
   StudentModel.findByIdAndUpdate(studentId, req.body, { new: true })
     .then((updatedStudent) => {
@@ -176,11 +197,12 @@ app.put("/api/students/:studentId", (req, res) => {
     .catch((err) => {
       res.status(500).json({ message: "error updating student", err });
       console.log("error updating student", err);
+      next(err);
     });
 });
 
 // delete a specific student by id
-app.delete("/api/students/:studentId", (req, res) => {
+app.delete("/api/students/:studentId", (req, res, next) => {
   const { studentId } = req.params;
   StudentModel.findByIdAndDelete(studentId)
     .then((studentDeleted) => {
@@ -190,8 +212,12 @@ app.delete("/api/students/:studentId", (req, res) => {
     .catch((err) => {
       res.status(500).json({ message: "error deleting student", err });
       console.log("error deleting student", err);
+      next(err);
     });
 });
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 // START SERVER
 app.listen(PORT, () => {
