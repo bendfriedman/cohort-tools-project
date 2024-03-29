@@ -3,6 +3,10 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const PORT = 5005;
 const mongoose = require("mongoose");
+require("dotenv").config()
+
+
+const { isAuthenticated } = require("./middleware/jwt.middleware");
 
 // STATIC DATA
 // Devs Team - Import the provided files with JSON data of students and cohorts here:
@@ -39,12 +43,21 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+
+
 // ROUTES - https://expressjs.com/en/starter/basic-routing.html
 // Devs Team - Start working on the routes here:
 // ...
 app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
+
+//Auth Routes
+const authRoutes = require("./routes/auth.routes");
+app.use("/auth", authRoutes);
+
+const userRoutes = require("./routes/user.routes");
+app.use("/api/users", isAuthenticated, userRoutes );
 
 // COHORTS ROUTES
 app.get("/api/cohorts", (req, res, next) => {

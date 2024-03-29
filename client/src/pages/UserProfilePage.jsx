@@ -23,7 +23,7 @@ function UserProfilePage() {
         axios
         .get(
           `${API_URL}/api/users/${user._id}`,
-          { headers: { Authorization: `Bearer ${storedToken}` }}
+          { headers: { authorization: `Bearer ${storedToken}` }}
           )
           .then((response) => {
             setUserProfile(response.data);

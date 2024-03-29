@@ -1,7 +1,0 @@
-_id,firstName,lastName,email,phone,linkedinUrl,languages[0],languages[1],program,background,image,cohort
-1,Christine,Clayton,christine.clayton@example.com,567-890-1234,https://linkedin.com/in/christineclaytonexample,English,Dutch,Web Dev,Computer Engineering,https://i.imgur.com/r8bo8u7.png,1
-2,Grace,Green,grace.green@example.com,901-234-5678,https://linkedin.com/in/gracegreenexample,English,Portuguese,Web Dev,Software Development,https://i.imgur.com/r8bo8u7.png,1
-3,Jack,Johnson,jack.johnson@example.com,234-567-8901,https://linkedin.com/in/jackjohnsonexample,English,French,Web Dev,System Administration,https://i.imgur.com/r8bo8u7.png,1
-4,John,Doe,john.doe@example.com,123-456-7890,https://linkedin.com/in/johndoeexample,English,Spanish,UX/UI,Computer Science,https://i.imgur.com/r8bo8u7.png,2
-5,Katie,King,katie.king@example.com,345-678-9012,https://linkedin.com/in/katiekingexample,English,German,UX/UI,Information Systems,https://i.imgur.com/r8bo8u7.png,2
-6,Irene,Iverson,irene.iverson@example.com,123-456-7890,https://linkedin.com/in/ireneiversonexample,English,Spanish,Data Analytics,Economics,https://i.imgur.com/r8bo8u7.png,3
