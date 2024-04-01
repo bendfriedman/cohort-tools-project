@@ -6,9 +6,11 @@ const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 // AUTH ROUTES
 router.post("/signup", async (req,res) => {
-    const { userName, email, password } = req.body;
+    console.log("signup api call")
+    console.log(req.body)
+    const { name, email, password } = req.body;
     
-    if(email === "" || password === "" || userName === ""){
+    if(email === "" || password === "" || name === ""){
         res.status(400).json({message: "Provide email, password and name"})
     }
 
@@ -25,7 +27,7 @@ router.post("/signup", async (req,res) => {
     res.status(400).json({
       message:
         "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
-    });
+    })
     return;
   }
 
@@ -55,11 +57,12 @@ router.post("/signup", async (req,res) => {
 
 router.post("/login", async (req,res) => {
     const {email, password} = req.body;
-
+    console.log("pre found a user:", req.body);
     try {
         const foundUser = await UserModel.findOne({email});
+        console.log("we found a user:", foundUser)
         if (!foundUser) {
-            rescape.statusatisfies(400).json({
+            res.status(400).json({
             message:"No user with that email"
             })
         } else {
@@ -72,9 +75,10 @@ router.post("/login", async (req,res) => {
                     message: "Incorrect password"
                 })
             } else {
-                const {_id, userName} = foundUser
-                const payload = {_id, userName}
-
+                const {_id, name} = foundUser
+                console.log( "found user ",foundUser)
+                const payload = {_id, name}
+                console.log( "our payload: ",payload)
                 const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {algorithm: "HS256", expiresIn: "6h"})
                 res.status(200).json({
                     message: "You successfully logged in",
@@ -90,9 +94,8 @@ router.post("/login", async (req,res) => {
 })
 
 
-router.get("/verify", isAuthenticated, (req, res) => {
-    console.log("verify route ::::: ", req.payload)
-
+router.get("/verify",isAuthenticated, (req, res) => {
+    console.log("verify route :", req.payload)
     res.status(200).json(req.payload)    
 })
 

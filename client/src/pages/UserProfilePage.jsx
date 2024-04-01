@@ -18,7 +18,8 @@ function UserProfilePage() {
   useEffect(() => {
     const getStudent = () => {
       const storedToken = localStorage.getItem("authToken");
-
+      console.log(storedToken);
+      console.log("joshua want see user:",user)
       if (storedToken) {
         axios
         .get(
@@ -27,6 +28,7 @@ function UserProfilePage() {
           )
           .then((response) => {
             setUserProfile(response.data);
+            console.log(response.data)
             setLoading(false);
           })
           .catch((error) => {
@@ -38,7 +40,7 @@ function UserProfilePage() {
           setErrorMessage("User not logged in");
         }
     };
-
+    console.log(getStudent())
     getStudent();
   }, [user._id]);
 

@@ -63,7 +63,7 @@ app.use("/api/users", isAuthenticated, userRoutes );
 app.get("/api/cohorts", (req, res, next) => {
   CohortModel.find({})
     .then((cohorts) => {
-      console.log("cohorts retrieved", cohorts);
+      // console.log("cohorts retrieved", cohorts);
       res.json(cohorts);
     })
     .catch((err) => {
@@ -79,13 +79,13 @@ app.get("/api/cohorts/:cohortId", (req, res, next) => {
   CohortModel.findById(cohortId)
     .then((foundCohertById) => {
       res.status(200).json(foundCohertById);
-      console.log("Got one cohort By the Id", foundCohertById);
+      // console.log("Got one cohort By the Id", foundCohertById);
     })
-    .catch((error) => {
+    .catch((err) => {
       res
         .status(500)
-        .json({ message: "error while fetching cohort By the Id", error });
-      console.log("error while fetching cohort By the Id", error);
+        .json({ message: "error while fetching cohort By the Id", err });
+      console.log("error while fetching cohort By the Id", err);
       next(err);
     });
 });
@@ -146,8 +146,8 @@ app.get("/api/students", (req, res, next) => {
       console.log("Retrieved Students", students);
       res.json(students);
     })
-    .catch((error) => {
-      console.log("Error while get students from DB", error);
+    .catch((err) => {
+      console.log("Error while get students from DB", err);
       res.status(500).json({ error: "Failed to retrieve students" });
       next(err);
     });
